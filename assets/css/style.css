@@ -68,7 +68,7 @@ button, input, select { font: inherit; color: inherit; }
 :focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
 
 /* ===== Header ===== */
-.site-header { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); }
+.site-header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); }
 .header-inner { max-width: 1120px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
 .brand-mark { width: 38px; height: 38px; border-radius: 10px; background: var(--primary); color: var(--primary-ink); display: grid; place-items: center; font-weight: 700; font-size: .9rem; }
@@ -213,7 +213,7 @@ td .cell-flex { display: flex; gap: 8px; align-items: flex-start; }
   .toc a { border: 1px solid var(--border); border-radius: 999px; white-space: nowrap; margin: 0; padding: 4px 12px; background: var(--surface); }
 }
 .lesson-body { min-width: 0; display: grid; gap: 22px; }
-.lesson-body > section { scroll-margin-top: 80px; }
+.lesson-body > section { scroll-margin-top: 80px; min-width: 0; }
 .lesson-body h2 { display: flex; align-items: center; gap: 10px; font-size: 1.3rem; }
 .lesson-body h2 .ic { width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; background: var(--pcs); color: var(--pc); font-size: 1rem; flex: none; }
 

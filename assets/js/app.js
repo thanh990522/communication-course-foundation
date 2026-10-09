@@ -5,6 +5,10 @@
   var main = document.getElementById('main');
   var LESSONS = C.lessons;
   var PHASES = C.phases;
+  // Bản đóng gói để đăng dạng Artifact (scripts/build_artifact.py) đặt cờ này:
+  // khung Artifact không cho đổi #hash, không in, không dùng micro.
+  var IS_ARTIFACT = !!window.CF_ARTIFACT;
+  if (IS_ARTIFACT) document.documentElement.classList.add('is-artifact');
 
   /* ---------- Tiện ích ---------- */
   function esc(s) {
@@ -362,7 +366,7 @@
         '<div><dt>Sản phẩm speaking</dt><dd>' + esc(l.speakingProduct) + '</dd></div></dl>' +
         '<div class="lesson-actions"><button type="button" class="btn ' + (done ? 'btn-good' : 'btn-primary') + '" id="done-btn" aria-pressed="' + done + '">' +
           (done ? '✓ Đã hoàn thành' : 'Đánh dấu đã học xong') + '</button>' +
-          '<button type="button" class="btn" onclick="window.print()">In / lưu PDF</button></div>' +
+          (IS_ARTIFACT ? '' : '<button type="button" class="btn" onclick="window.print()">In / lưu PDF</button>') + '</div>' +
       '</div></section>' +
       '<div class="container lesson-layout p' + p.number + '">' +
         '<nav class="toc" aria-label="Mục lục buổi học"><div class="toc-title">Trong buổi này</div><ol>' +
@@ -483,11 +487,15 @@
       if (playing) { stop(); draw(-1); return; }
       playing = true; playBtn.textContent = '■ Dừng'; step(0);
     });
-    window.addEventListener('hashchange', stop, { once: true });
+    onLeave(stop);
   }
 
   /* ---------- Ghi âm bài nói (chỉ lưu trên máy) ---------- */
   function recorderHtml(n) {
+    if (IS_ARTIFACT) {
+      return '<div class="recorder"><strong>Ghi âm phần nói</strong>' +
+        '<p class="muted" style="margin:0;font-size:.9rem">Hãy ghi âm bằng ứng dụng ghi âm trên điện thoại rồi gửi file cho giáo viên. Trang này không dùng micro của bạn.</p></div>';
+    }
     return '<div class="recorder" id="recorder" data-lesson="' + n + '"><strong>Ghi âm phần nói</strong>' +
       '<p class="muted" style="margin:0;font-size:.9rem">Thu âm ngay trên trình duyệt, nghe lại và tải file về để gửi giáo viên. Bản ghi không được tải lên đâu cả.</p>' +
       '<div class="recorder-row"><button type="button" class="btn btn-sm btn-primary" id="rec-btn">● Bắt đầu ghi</button>' +
@@ -531,7 +539,7 @@
         btn.textContent = '■ Dừng ghi';
         $('#rec-status').innerHTML = '<span class="rec-dot" style="display:inline-block"></span> Đang ghi…';
         tick = setInterval(function () { $('#rec-time').textContent = fmt(Date.now() - start); }, 250);
-        window.addEventListener('hashchange', function () { if (rec && rec.state === 'recording') rec.stop(); stopAll(); }, { once: true });
+        onLeave(function () { if (rec && rec.state === 'recording') rec.stop(); stopAll(); });
       }).catch(function () {
         $('#rec-status').textContent = 'Không truy cập được micro. Hãy cho phép quyền micro trong trình duyệt.';
       });
@@ -611,7 +619,7 @@
       '</form></div><div id="flash-host"></div></div></section>';
     var form = $('#flash-form');
     form.addEventListener('change', function (e) {
-      if (e.target.name === 'scope' || e.target.name === 'dir') location.hash = '#/review?scope=' + form.scope.value + '&dir=' + form.dir.value;
+      if (e.target.name === 'scope' || e.target.name === 'dir') go('#/review?scope=' + form.scope.value + '&dir=' + form.dir.value);
     });
     mountFlashcards($('#flash-host'), items, { dir: dir });
   }
@@ -744,8 +752,28 @@
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
 
   /* ---------- Router ---------- */
+  var leaveFns = [];
+  function onLeave(fn) { leaveFns.push(fn); }
+
+  var BARE = { home: '#/', lessons: '#/lessons', review: '#/review', assessment: '#/assessment' };
+  function initialHash() {
+    var h = location.hash || '';
+    if (/^#\//.test(h)) return h;
+    var t = h.replace(/^#/, '');
+    var m = t.match(/^lesson-?(\d+)$/);
+    if (m) return '#/lesson/' + m[1];
+    return BARE[t] || '#/';
+  }
+  var current = initialHash();
+
+  function go(h) {
+    current = h;
+    if (!IS_ARTIFACT && location.hash !== h) { location.hash = h; return; } // hashchange sẽ gọi route()
+    route();
+  }
+
   function parseHash() {
-    var h = location.hash.replace(/^#/, '') || '/';
+    var h = current.replace(/^#/, '') || '/';
     var qi = h.indexOf('?');
     var path = qi === -1 ? h : h.slice(0, qi);
     var params = {};
@@ -757,6 +785,8 @@
     return { path: path, params: params };
   }
   function route() {
+    var fns = leaveFns; leaveFns = [];
+    fns.forEach(function (f) { try { f(); } catch (e) { /* bỏ qua */ } });
     if (TTS.ok) speechSynthesis.cancel();
     if (!modal.hidden) closeModal();
     var r = parseHash(), seg = r.path.split('/').filter(Boolean);
@@ -786,7 +816,7 @@
   $('#search-form').addEventListener('submit', function (e) {
     e.preventDefault();
     var q = $('#search-input').value.trim();
-    if (q) location.hash = '#/search?q=' + encodeURIComponent(q);
+    if (q) go('#/search?q=' + encodeURIComponent(q));
   });
   $('#theme-toggle').addEventListener('click', function () {
     var cur = document.documentElement.getAttribute('data-theme') ||
@@ -795,6 +825,15 @@
     document.documentElement.setAttribute('data-theme', next);
     try { localStorage.setItem('cf.theme', next); } catch (e) {}
   });
-  window.addEventListener('hashchange', route);
+  if (IS_ARTIFACT) {
+    // Khung Artifact chặn đổi #hash: điều hướng ngay trong trang.
+    document.addEventListener('click', function (e) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return;
+      var a = e.target.closest('a[href^="#/"]');
+      if (a) { e.preventDefault(); go(a.getAttribute('href')); }
+    });
+  } else {
+    window.addEventListener('hashchange', function () { current = location.hash || '#/'; route(); });
+  }
   route();
 })();

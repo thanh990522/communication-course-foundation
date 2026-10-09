@@ -49,6 +49,15 @@ Tính năng ghi âm cần chạy qua `http://localhost` hoặc `https://` (trìn
 2. Chạy `python3 scripts/build_data.py`. Script báo lỗi nếu thiếu buổi, hội thoại, bài tập…
 3. Commit cả `content/syllabus.md` và `data/course.js`.
 
+## Bản đã đăng
+
+Website đã được đăng dạng Artifact trên claude.ai: https://claude.ai/artifact/YCffoLDtetug7nBMXRJ2cE
+(mặc định riêng tư; chia sẻ cho học viên qua menu **Share** của trang).
+
+Bản Artifact được đóng gói thành một file bằng `python3 scripts/build_artifact.py` (ra `dist/artifact.html`).
+Khung Artifact không cho dùng micro và không in được, nên bản này ẩn nút in và thay phần ghi âm bằng lời nhắc dùng app ghi âm của điện thoại.
+Có thể mở thẳng một mục bằng link: `#lessons`, `#review`, `#assessment`, `#lesson-12`.
+
 ## Đưa lên mạng (GitHub Pages)
 
 Website hoàn toàn tĩnh, không cần build. Vào **Settings → Pages**, chọn *Deploy from a branch*, chọn nhánh và thư mục `/ (root)`.
