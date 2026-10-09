@@ -60,4 +60,7 @@ Có thể mở thẳng một mục bằng link: `#lessons`, `#review`, `#assessm
 
 ## Đưa lên mạng (GitHub Pages)
 
-Website hoàn toàn tĩnh, không cần build. Vào **Settings → Pages**, chọn *Deploy from a branch*, chọn nhánh và thư mục `/ (root)`.
+Workflow `.github/workflows/pages.yml` tự triển khai website mỗi lần đẩy code lên nhánh chính (hoặc bấm *Run workflow* trong tab Actions).
+Yêu cầu một lần: **Settings → Pages → Build and deployment → Source** chọn **GitHub Actions**.
+
+Địa chỉ: https://thanh990522.github.io/communication-course-foundation/
