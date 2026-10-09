@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tiếng Anh Giao Tiếp Foundation</title>
+  <meta name="description" content="Website học tập khóa Tiếng Anh Giao Tiếp Foundation (A1+ → B1), 36 buổi theo chủ đề – Thầy Hà Chí Thanh.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f5f8b'/%3E%3Cpath d='M16 20h32a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4H30l-9 8v-8h-5a4 4 0 0 1-4-4V24a4 4 0 0 1 4-4z' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script>
+    try {
+      var t = localStorage.getItem('cf.theme');
+      if (t) document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Bỏ qua đến nội dung</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#/">
+        <span class="brand-mark" aria-hidden="true">EN</span>
+        <span class="brand-text"><strong>Giao Tiếp Foundation</strong><small>A1+ → B1 · 36 buổi</small></span>
+      </a>
+      <nav class="main-nav" aria-label="Điều hướng chính">
+        <a href="#/" data-nav="home">Trang chủ</a>
+        <a href="#/lessons" data-nav="lessons">Lộ trình 36 buổi</a>
+        <a href="#/review" data-nav="review">Ôn từ vựng</a>
+        <a href="#/assessment" data-nav="assessment">Kiểm tra đánh giá</a>
+      </nav>
+      <form class="search-form" role="search" id="search-form">
+        <label class="visually-hidden" for="search-input">Tìm trong khóa học</label>
+        <input id="search-input" type="search" placeholder="Tìm từ, mẫu câu, chủ đề…" autocomplete="off">
+      </form>
+      <button class="icon-btn" id="theme-toggle" type="button" aria-label="Đổi giao diện sáng / tối" title="Đổi giao diện sáng / tối">☾</button>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <noscript><p class="container">Vui lòng bật JavaScript để xem nội dung khóa học.</p></noscript>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>Nội dung lấy nguyên văn từ <a id="source-link" href="#" target="_blank" rel="noopener">syllabus khóa học</a> của Thầy Hà Chí Thanh.</p>
+      <p class="muted">Tiến độ, bài tập và tự đánh giá chỉ được lưu trên trình duyệt của bạn. Bản ghi âm không được tải lên đâu cả.</p>
+    </div>
+  </footer>
+
+  <div class="modal" id="modal" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="icon-btn modal-close" type="button" data-close aria-label="Đóng">✕</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="data/course.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
